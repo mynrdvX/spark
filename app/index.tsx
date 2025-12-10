@@ -1,5 +1,5 @@
 
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, useColorScheme, Switch } from 'react-native';
 import React, { useState } from 'react';
 
 const quotes = [
@@ -15,13 +15,75 @@ const quotes = [
 
 export default function QuoteGenerator() {
   const [quoteIndex, setQuoteIndex] = useState(0);
+  const colorScheme = useColorScheme();
+  const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
 
   const generateQuote = () => {
     setQuoteIndex(Math.floor(Math.random() * quotes.length));
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(previousState => !previousState);
+  };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+      backgroundColor: isDarkMode ? '#333' : '#f5f5f5',
+    },
+    quoteText: {
+      fontSize: 28,
+      textAlign: 'center',
+      marginBottom: 20,
+      fontFamily: 'serif',
+      fontStyle: 'italic',
+      color: isDarkMode ? '#fff' : '#333',
+    },
+    authorText: {
+      fontSize: 18,
+      textAlign: 'right',
+      marginBottom: 40,
+      fontFamily: 'sans-serif',
+      color: isDarkMode ? '#ccc' : '#555',
+    },
+    button: {
+      backgroundColor: isDarkMode ? '#28a745' : '#007BFF',
+      paddingVertical: 15,
+      paddingHorizontal: 30,
+      borderRadius: 5,
+    },
+    buttonText: {
+      color: '#fff',
+      fontSize: 18,
+    },
+    switchContainer: {
+      position: 'absolute',
+      top: 50,
+      right: 20,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    switchText: {
+      color: isDarkMode ? '#fff' : '#333',
+      marginRight: 10,
+    },
+  });
+
   return (
     <View style={styles.container}>
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchText}>Dark Mode</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isDarkMode ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleDarkMode}
+          value={isDarkMode}
+        />
+      </View>
       <Text style={styles.quoteText}>
         "{quotes[quoteIndex].quote}"
       </Text>
@@ -34,38 +96,3 @@ export default function QuoteGenerator() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  quoteText: {
-    fontSize: 28,
-    textAlign: 'center',
-    marginBottom: 20,
-    fontFamily: 'serif',
-    fontStyle: 'italic',
-    color: '#333',
-  },
-  authorText: {
-    fontSize: 18,
-    textAlign: 'right',
-    marginBottom: 40,
-    fontFamily: 'sans-serif',
-    color: '#555',
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-});
